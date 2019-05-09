@@ -1,0 +1,24 @@
+{
+    "name": "kduma/content-negotiable-responses",
+    "description": "Laravel 5 helpers for creating content-type negotiable responses",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Krystian Duma",
+            "email": "opensource@krystian.duma.sh"
+        }
+    ],
+    "require": {
+        "ext-dom": "*",
+        "ext-json": "*",
+        "rybakit/msgpack": "^0.5.4",
+        "spatie/array-to-xml": "^2.9",
+        "symfony/yaml": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "KDuma\\ContentNegotiableResponses\\": "src/"
+        }
+    }
+}
