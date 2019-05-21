@@ -4,6 +4,7 @@
 namespace KDuma\ContentNegotiableResponses;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 
 class ArrayResponse extends BaseArrayResponse 
 {
@@ -23,12 +24,10 @@ class ArrayResponse extends BaseArrayResponse
     }
     
     /**
-     * @return array
+     * @return array|Arrayable
      */
-    protected function getDataArray()
+    protected function getData()
     {
-        return $this->data instanceof Arrayable 
-            ? $this->data->toArray() 
-            : $this->data;
+        return $this->data;
     }
 }

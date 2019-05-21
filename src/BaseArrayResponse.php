@@ -21,6 +21,15 @@ abstract class BaseArrayResponse extends BaseResponse
     implements JsonResponseInterface, XmlResponseInterface, MsgPackResponseInterface, YamlResponseInterface
 {
     use DiscoversPublicProperties;
+    
+    /**
+     * @return Collection
+     * @throws \ReflectionException
+     */
+    protected function getData()
+    {
+        return $this->getPublicProperties();
+    }
 
     /**
      * @param Request $request
@@ -28,9 +37,13 @@ abstract class BaseArrayResponse extends BaseResponse
      * @return array
      * @throws \ReflectionException
      */
-    protected function getDataArray($request) {
-        return $this->getPublicProperties()
-            ->toArray($request);
+    protected function getDataArray($request)
+    {
+        $data = $this->getData();
+
+        return $data instanceof Arrayable
+            ? $data->toArray($request)
+            : $data;
     }
 
     /**
