@@ -8,9 +8,10 @@ use KDuma\ContentNegotiableResponses\Interfaces\MsgPackResponseInterface;
 use KDuma\ContentNegotiableResponses\Interfaces\JsonResponseInterface;
 use KDuma\ContentNegotiableResponses\Interfaces\TextResponseInterface;
 use KDuma\ContentNegotiableResponses\Interfaces\YamlResponseInterface;
-use KDuma\ContentNegotiableResponses\Interfaces\XmlResponseInterface;
-use Illuminate\Support\Collection;
 use KDuma\ContentNegotiableResponses\Traits\DiscoversPublicProperties;
+use KDuma\ContentNegotiableResponses\Interfaces\XmlResponseInterface;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 use Spatie\ArrayToXml\ArrayToXml;
 use Symfony\Component\Yaml\Yaml;
 use Illuminate\Http\Response;
@@ -41,7 +42,7 @@ abstract class BaseArrayResponse extends BaseResponse
     {
         $data = $this->getData();
 
-        return $data instanceof Arrayable
+        return $data instanceof Arrayable || $data instanceof JsonResource
             ? $data->toArray($request)
             : $data;
     }
