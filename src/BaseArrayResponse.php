@@ -23,12 +23,14 @@ abstract class BaseArrayResponse extends BaseResponse
     use DiscoversPublicProperties;
 
     /**
+     * @param Request $request
+     *
      * @return array
      * @throws \ReflectionException
      */
-    protected function getDataArray() {
+    protected function getDataArray($request) {
         return $this->getPublicProperties()
-            ->toArray();
+            ->toArray($request);
     }
 
     /**
@@ -46,7 +48,7 @@ abstract class BaseArrayResponse extends BaseResponse
      */
     public function toTextResponse($request)
     {
-        $content = print_r($this->getDataArray(), true);
+        $content = print_r($this->getDataArray($request), true);
 
         return \response($content)->header('Content-Type', 'text/plain; charset=UTF-8');
     }
@@ -58,7 +60,7 @@ abstract class BaseArrayResponse extends BaseResponse
      */
     public function toJsonResponse($request)
     {
-        $content = json_encode($this->getDataArray(), JSON_PRETTY_PRINT);
+        $content = json_encode($this->getDataArray($request), JSON_PRETTY_PRINT);
 
         return \response($content)->header('Content-Type', 'application/json; charset=UTF-8');
     }
@@ -71,7 +73,7 @@ abstract class BaseArrayResponse extends BaseResponse
      */
     public function toXmlResponse($request)
     {
-        $converter = new ArrayToXml($this->getDataArray());
+        $converter = new ArrayToXml($this->getDataArray($request));
         $dom = $converter->toDom();
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
@@ -87,7 +89,7 @@ abstract class BaseArrayResponse extends BaseResponse
      */
     public function toYamlResponse($request)
     {
-        $content = $yaml = Yaml::dump($this->getDataArray(), 2, 4);
+        $content = $yaml = Yaml::dump($this->getDataArray($request), 2, 4);
 
         return \response($content)->header('Content-Type', 'application/yaml; charset=UTF-8');
     }
@@ -99,7 +101,7 @@ abstract class BaseArrayResponse extends BaseResponse
      */
     public function toMsgPackResponse($request)
     {
-        $content = MessagePack::pack($this->getDataArray());
+        $content = MessagePack::pack($this->getDataArray($request));
 
         return \response($content)->header('Content-Type', 'application/msgpack');
     }
