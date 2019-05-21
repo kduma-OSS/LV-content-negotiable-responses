@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use MessagePack\MessagePack;
 
 abstract class BaseArrayResponse extends BaseResponse
-    implements JsonResponseInterface, TextResponseInterface, XmlResponseInterface, MsgPackResponseInterface, YamlResponseInterface
+    implements JsonResponseInterface, XmlResponseInterface, MsgPackResponseInterface, YamlResponseInterface
 {
     use DiscoversPublicProperties;
 

@@ -7,7 +7,7 @@ composer require kduma/content-negotiable-responses
 ## Content Formats (for `ArrayResponse` and `BasicViewResponse`)
 
 Currently supported formats are:
- - `text/plain` - resulting response will be output of built-in PHP function `print_r`
+ - `text/plain` (disabled by default, to enable it in your custom class implement `TextResponseInterface`) - resulting response will be output of built-in PHP function `print_r`
  - `application/json` -  resulting response will be output of built-in PHP function `json_encode`
  - `application/yaml` - resulting response will be generated using [symfony/yaml](https://packagist.org/packages/symfony/yaml) package
  - `application/xml` - resulting response will be generated using [spatie/array-to-xml](https://packagist.org/packages/spatie/array-to-xml) package
