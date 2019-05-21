@@ -10,13 +10,16 @@ use KDuma\ContentNegotiableResponses\Interfaces\TextResponseInterface;
 use KDuma\ContentNegotiableResponses\Interfaces\YamlResponseInterface;
 use KDuma\ContentNegotiableResponses\Traits\DiscoversPublicProperties;
 use KDuma\ContentNegotiableResponses\Interfaces\XmlResponseInterface;
+use KDuma\ContentNegotiableResponses\Helpers\ResourceResponseHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Spatie\ArrayToXml\ArrayToXml;
 use Symfony\Component\Yaml\Yaml;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use MessagePack\MessagePack;
+use JsonSerializable;
 
 abstract class BaseArrayResponse extends BaseResponse
     implements JsonResponseInterface, XmlResponseInterface, MsgPackResponseInterface, YamlResponseInterface
@@ -42,9 +45,21 @@ abstract class BaseArrayResponse extends BaseResponse
     {
         $data = $this->getData();
 
-        return $data instanceof Arrayable || $data instanceof JsonResource
-            ? $data->toArray($request)
-            : $data;
+        if ($data instanceof JsonResource) {
+            $helper = new ResourceResponseHelper($data);
+            $data = $helper->getData($request);
+            
+            if(!$this->responseCode)
+                $this->responseCode = $helper->getStatusCode();
+        } 
+        elseif ($data instanceof Arrayable) {
+            $data = $data->toArray($request);
+        } 
+        elseif ($data instanceof JsonSerializable) {
+            $data = $data->jsonSerialize();
+        }
+        
+        return $data;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace KDuma\ContentNegotiableResponses;
 
+use Illuminate\Http\Response;
 use KDuma\ContentNegotiableResponses\Interfaces\MsgPackResponseInterface;
 use KDuma\ContentNegotiableResponses\Interfaces\JsonResponseInterface;
 use KDuma\ContentNegotiableResponses\Interfaces\HtmlResponseInterface;
@@ -14,6 +15,11 @@ use Illuminate\Support\Str;
 
 abstract class BaseResponse implements Responsable
 {
+    /**
+     * @var null|int HTTP Response Code
+     */
+    protected $responseCode = null;
+    
     /**
      * @inheritDoc
      * @throws \ReflectionException
@@ -41,8 +47,14 @@ abstract class BaseResponse implements Responsable
         $handler = 'to'.Str::before($interface, 'Interface');
         
         abort_unless(method_exists($this, $handler) && is_callable([$this, $handler]), 500);
+
+        /** @var Response $response */
+        $response = $this->{$handler}($request);
         
-        return $this->{$handler}($request);
+        if($this->responseCode)
+            $response->setStatusCode($this->responseCode);
+        
+        return $response;
     }
 
     /**
