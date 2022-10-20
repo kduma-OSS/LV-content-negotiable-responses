@@ -4,14 +4,11 @@
 namespace KDuma\ContentNegotiableResponses\Interfaces;
 
 
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 interface HtmlResponseInterface
 {
-    /**
-     * @param  Request  $request
-     * @return Response
-     */
-    public function toHtmlResponse($request);
+    public function toHtmlResponse(Request $request): Response|Htmlable;
 }

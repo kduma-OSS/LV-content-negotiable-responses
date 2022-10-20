@@ -4,6 +4,7 @@
 namespace KDuma\ContentNegotiableResponses;
 
 
+use DOMException;
 use KDuma\ContentNegotiableResponses\Interfaces\MsgPackResponseInterface;
 use KDuma\ContentNegotiableResponses\Interfaces\JsonResponseInterface;
 use KDuma\ContentNegotiableResponses\Interfaces\TextResponseInterface;
@@ -14,6 +15,7 @@ use KDuma\ContentNegotiableResponses\Helpers\ResourceResponseHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
+use ReflectionException;
 use Spatie\ArrayToXml\ArrayToXml;
 use Symfony\Component\Yaml\Yaml;
 use Illuminate\Http\Response;
@@ -25,69 +27,52 @@ abstract class BaseArrayResponse extends BaseResponse
     implements JsonResponseInterface, XmlResponseInterface, MsgPackResponseInterface, YamlResponseInterface
 {
     use DiscoversPublicProperties;
-    
+
     /**
-     * @return Collection
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    protected function getData()
+    protected function getData(): array|Arrayable
     {
         return $this->getPublicProperties();
     }
 
     /**
-     * @param Request $request
-     *
-     * @return array
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    protected function getDataArray($request)
+    protected function getDataArray(Request $request): array
     {
         $data = $this->getData();
 
         if ($data instanceof JsonResource) {
             $helper = new ResourceResponseHelper($data);
             $data = $helper->getData($request);
-            
+
             if(!$this->responseCode)
                 $this->responseCode = $helper->getStatusCode();
-        } 
+        }
         elseif ($data instanceof Arrayable) {
             $data = $data->toArray($request);
-        } 
+        }
         elseif ($data instanceof JsonSerializable) {
             $data = $data->jsonSerialize();
         }
-        
+
         return $data;
     }
 
-    /**
-     * @return string
-     */
     protected function getDefaultType(): string
     {
         return JsonResponseInterface::class;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function toTextResponse($request)
+    public function toTextResponse(Request $request): Response
     {
         $content = print_r($this->getDataArray($request), true);
 
         return \response($content)->header('Content-Type', 'text/plain; charset=UTF-8');
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function toJsonResponse($request)
+    public function toJsonResponse(Request $request): Response
     {
         $content = json_encode($this->getDataArray($request), JSON_PRETTY_PRINT);
 
@@ -95,12 +80,9 @@ abstract class BaseArrayResponse extends BaseResponse
     }
 
     /**
-     * @param Request $request
-     *
-     * @return Response
-     * @throws \DOMException
+     * @throws DOMException|ReflectionException
      */
-    public function toXmlResponse($request)
+    public function toXmlResponse(Request $request): Response
     {
         $converter = new ArrayToXml($this->getDataArray($request));
         $dom = $converter->toDom();
@@ -111,24 +93,14 @@ abstract class BaseArrayResponse extends BaseResponse
         return \response($content)->header('Content-Type', 'application/xml; charset=UTF-8');
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function toYamlResponse($request)
+    public function toYamlResponse(Request $request): Response
     {
         $content = $yaml = Yaml::dump($this->getDataArray($request), 2, 4);
 
         return \response($content)->header('Content-Type', 'application/yaml; charset=UTF-8');
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function toMsgPackResponse($request)
+    public function toMsgPackResponse(Request $request): Response
     {
         $content = MessagePack::pack($this->getDataArray($request));
 

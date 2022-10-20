@@ -9,9 +9,5 @@ use Illuminate\Http\Response;
 
 interface YamlResponseInterface
 {
-    /**
-     * @param  Request  $request
-     * @return Response
-     */
-    public function toYamlResponse($request);
+    public function toYamlResponse(Request $request): Response;
 }

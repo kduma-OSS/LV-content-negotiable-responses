@@ -15,7 +15,6 @@ trait DiscoversPublicProperties
     /**
      * source: https://thibaud.dauce.fr/posts/2017-07-26-improvements-of-the-new-Responsable-interface-in-Laravel.html
      *
-     * @return Collection
      * @throws ReflectionException
      */
     protected function getPublicProperties(): Collection

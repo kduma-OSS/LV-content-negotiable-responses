@@ -9,9 +9,5 @@ use Illuminate\Http\Response;
 
 interface TextResponseInterface
 {
-    /**
-     * @param  Request  $request
-     * @return Response
-     */
-    public function toTextResponse($request);
+    public function toTextResponse(Request $request): Response;
 }
