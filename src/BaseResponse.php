@@ -12,17 +12,19 @@ use KDuma\ContentNegotiableResponses\Interfaces\XmlResponseInterface;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use ReflectionClass;
+use ReflectionException;
 
 abstract class BaseResponse implements Responsable
 {
     /**
      * @var null|int HTTP Response Code
      */
-    protected $responseCode = null;
-    
+    protected ?int $responseCode = null;
+
     /**
      * @inheritDoc
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function toResponse($request)
     {
@@ -40,26 +42,23 @@ abstract class BaseResponse implements Responsable
             });
 
         $response_content_type = $request->prefers($available_types->keys()->toArray()) ?? $available_types->keys()->first();
-        
+
         abort_if($response_content_type === null, 500);
-        
-        $interface = (new \ReflectionClass($available_types->get($response_content_type)))->getShortName();
+
+        $interface = (new ReflectionClass($available_types->get($response_content_type)))->getShortName();
         $handler = 'to'.Str::before($interface, 'Interface');
-        
+
         abort_unless(method_exists($this, $handler) && is_callable([$this, $handler]), 500);
 
         /** @var Response $response */
         $response = $this->{$handler}($request);
-        
+
         if($this->responseCode)
             $response->setStatusCode($this->responseCode);
-        
+
         return $response;
     }
 
-    /**
-     * @return Collection
-     */
     protected function getTypesMap(): Collection
     {
         return collect([
@@ -67,10 +66,10 @@ abstract class BaseResponse implements Responsable
 
             'text/html' => HtmlResponseInterface::class,
             'application/xhtml+xml' => HtmlResponseInterface::class,
-            
+
             'text/json' => JsonResponseInterface::class,
             'application/json' => JsonResponseInterface::class,
-            
+
             'text/yaml' => YamlResponseInterface::class,
             'application/yaml' => YamlResponseInterface::class,
 
@@ -82,8 +81,5 @@ abstract class BaseResponse implements Responsable
         ]);
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getDefaultType(): string;
 }

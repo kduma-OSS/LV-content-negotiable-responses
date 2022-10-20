@@ -13,32 +13,10 @@ use ReflectionException;
 
 class BasicViewResponse extends BaseViewResponse
 {
-    /**
-     * @var string
-     */
-    protected $view;
-    
-    /**
-     * @var array|Arrayable
-     */
-    protected $data;
+    public function __construct(protected string $view, protected array|Arrayable $data)
+    {}
 
-    /**
-     * ArrayResponse constructor.
-     *
-     * @param string           $view
-     * @param array|Arrayable $data
-     */
-    public function __construct(string $view, $data)
-    {
-        $this->data = $data;
-        $this->view = $view;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getDataArray()
+    protected function getDataArray(Request $request): array
     {
         return $this->data instanceof Arrayable
             ? $this->data->toArray()
@@ -46,13 +24,10 @@ class BasicViewResponse extends BaseViewResponse
     }
 
     /**
-     * @param Request $request
-     *
-     * @return Factory|View
      * @throws ReflectionException
      */
-    protected function generateView(Request $request)
+    protected function generateView(Request $request): View
     {
-        return $this->view($this->view, $this->getDataArray());
+        return $this->view($this->view, $this->getDataArray($request));
     }
 }

@@ -6,27 +6,12 @@ namespace KDuma\ContentNegotiableResponses;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
-class ArrayResponse extends BaseArrayResponse 
+class ArrayResponse extends BaseArrayResponse
 {
-    /**
-     * @var array|Arrayable
-     */
-    protected $data;
+    public function __construct(protected array|Arrayable $data)
+    {}
 
-    /**
-     * ArrayResponse constructor.
-     *
-     * @param array|Arrayable $data
-     */
-    public function __construct($data)
-    {
-        $this->data = $data;
-    }
-    
-    /**
-     * @return array|Arrayable
-     */
-    protected function getData()
+    protected function getData(): array|Arrayable
     {
         return $this->data;
     }
