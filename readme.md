@@ -1,3 +1,5 @@
+Check full documentation here: [opensource.duma.sh/libraries/php/laravel-content-negotiable-responses](https://opensource.duma.sh/libraries/php/laravel-content-negotiable-responses)
+
 ## Installation
 
 ```bash
