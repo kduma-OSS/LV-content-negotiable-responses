@@ -1,5 +1,9 @@
 # Content Negotiable Responses for Laravel
 
+[![Latest Stable Version](https://poser.pugx.org/kduma/content-negotiable-responses/v/stable.svg)](https://packagist.org/packages/kduma/content-negotiable-responses)
+[![Total Downloads](https://poser.pugx.org/kduma/content-negotiable-responses/downloads.svg)](https://packagist.org/packages/kduma/content-negotiable-responses)
+[![License](https://poser.pugx.org/kduma/content-negotiable-responses/license.svg)](https://packagist.org/packages/kduma/content-negotiable-responses)
+
 Laravel helpers for creating HTTP responses that automatically negotiate content type based on the client's `Accept` header (JSON, XML, YAML, MsgPack, HTML).
 
 Full documentation: [opensource.duma.sh/libraries/php/laravel-content-negotiable-responses](https://opensource.duma.sh/libraries/php/laravel-content-negotiable-responses)
