@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KDuma\ContentNegotiableResponses;
 
 use Illuminate\Http\Response;
