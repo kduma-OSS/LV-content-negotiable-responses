@@ -1,5 +1,11 @@
 Check full documentation here: [opensource.duma.sh/libraries/php/laravel-content-negotiable-responses](https://opensource.duma.sh/libraries/php/laravel-content-negotiable-responses)
 
+## Requirements
+
+- PHP `^8.3`
+- Laravel `^12.0 || ^13.0`
+- symfony/yaml `^7.0 || ^8.0`
+
 ## Installation
 
 ```bash
